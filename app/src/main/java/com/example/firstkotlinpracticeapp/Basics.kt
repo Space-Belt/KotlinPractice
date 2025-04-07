@@ -10,3 +10,12 @@ fun floatDouble() {
     pi = 3.1415926535f
     println(pi)
 }
+
+fun charCharacter() {
+    val myChar:Char = '\\'
+    println(myChar)
+
+    val myCharacter = "Long Long Long"
+    println(myCharacter.uppercase())
+}
+
