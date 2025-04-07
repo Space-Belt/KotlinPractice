@@ -19,3 +19,16 @@ fun charCharacter() {
     println(myCharacter.uppercase())
 }
 
+//studyReadInToInt
+fun main() {
+    var age = 0
+
+    age = readlnOrNull()?.toIntOrNull() ?: run {
+        println(age)
+        return
+    }
+
+    var character = readlnOrNull() ?: ""
+    println(character)
+    println(age)
+}
