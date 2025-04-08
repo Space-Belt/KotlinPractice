@@ -35,16 +35,13 @@ fun studyReadInToInt() {
 
 fun main() {
     println("나이를 입력해주세요:")
-
     val age = readlnOrNull()?.toIntOrNull() ?: run {
         println("올바른 숫자를 입력해주세요")
         return
     }
-
     if (age in 18..40) {
         println("클럽입장허가")
     } else {
         println("입장 불가")
     }
-
 }
