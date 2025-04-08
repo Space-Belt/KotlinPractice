@@ -14,7 +14,7 @@ fun main() {
         playerChoice = readlnOrNull() ?: ""
 
         if (playerChoice == "가위" || playerChoice == "바위" || playerChoice == "보") {
-            break  // 올바른 입력을 받으면 루프 종료
+            break
         } else {
             println("잘못 입력했습니다. 가위, 바위, 보 중에서 다시 입력해주세요.")
         }
