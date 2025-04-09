@@ -2,7 +2,6 @@ package com.example.firstkotlinpracticeapp
 
 // 클래스 안에 어떤 종류의 변수를 원하는 지 적을 수 있다.
 // 생성자 내에서 해당 항목들의 가시성을 명시적으로 수정하고 싶지 않으면 안해도됨
-
 //class Dogg (name: String) {
 //    init {
 //        bark(name)
