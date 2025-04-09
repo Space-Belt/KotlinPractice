@@ -7,18 +7,9 @@ data class CoffeeDetails(
     val shotAmount: Int
 )
 
-class Coffee(val sugarCount: Int, val name: String, val size: String, val shotAmount: Int) {
-
-    fun makeCoffee(coffeeDetails: CoffeeDetails) {
-        if(coffeeDetails.sugarCount >= 0) {
-            println("샷 ${coffeeDetails.sugarCount} 설탕 ${coffeeDetails.sugarCount} 사이즈 ${coffeeDetails.size} ${name}님꺼")
-        }
-    }
-}
-
-
 fun main() {
     println("누구 커피?")
+
     val name = readlnOrNull()?.takeIf { it.isNotEmpty() } ?: "철수"
     println("설탕 몇 스푼?")
     val sugarCount = readlnOrNull().let {
@@ -28,14 +19,24 @@ fun main() {
             it.toIntOrNull() ?: 0
         }
     }
-
-    makeCoffee(sugarCount,name)
+    println("사이즈 선택 기본 / 그란데 / 벤티")
+    val size = readlnOrNull()?.takeIf { it.isNotEmpty() } ?: "기본"
+    println("샷 개수 선택   기본 1")
+    val shotCount = readlnOrNull().let {
+        if (it.isNullOrEmpty()) {
+            1
+        } else {
+            it.toIntOrNull() ?: 0
+        }
+    }
+    val coffeeForMe = CoffeeDetails(sugarCount, name, size, shotCount)
+    makeCoffee(coffeeForMe)
 }
 
-fun makeCoffee(sugarCount: Int, name: String ) {
-    when(sugarCount) {
-        1 -> println("Coffee with $sugarCount spoon of sugar for $name")
-        0 -> println("Coffee with no sugar for $name")
-        else -> println("Coffee with $sugarCount spoons of sugar for $name")
+fun makeCoffee(coffeeDetails: CoffeeDetails) {
+    when(coffeeDetails.sugarCount) {
+        1 -> println("Coffee with ${coffeeDetails.sugarCount} spoon of sugar for ${coffeeDetails.name}")
+        0 -> println("Coffee with no sugar for ${coffeeDetails.name}")
+        else -> println("Coffee with ${coffeeDetails.sugarCount} spoons of sugar for ${coffeeDetails.name}")
     }
 }
