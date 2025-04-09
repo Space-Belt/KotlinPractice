@@ -33,6 +33,7 @@ fun main() {
     makeCoffee(coffeeForMe)
 }
 
+
 fun makeCoffee(coffeeDetails: CoffeeDetails) {
     when(coffeeDetails.sugarCount) {
         1 -> println("Coffee with ${coffeeDetails.sugarCount} spoon of sugar for ${coffeeDetails.name}")
