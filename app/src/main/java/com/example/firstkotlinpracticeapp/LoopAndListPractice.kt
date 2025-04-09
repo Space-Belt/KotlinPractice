@@ -1,7 +1,15 @@
 package com.example.firstkotlinpracticeapp
 
-/* 루프 다루기 */
 fun main() {
+    val numbers = mutableListOf(1, 2, 3, 4, 5)
+    for(index in 0 until numbers.size) {
+        numbers[index] = numbers[index] * 2
+    }
+    println(numbers)
+}
+
+/* 루프 다루기 */
+fun loopMain() {
     val shoppingList = mutableListOf("프로세서", "램", "그래픽카드3060", "SSD")
 
     // for in / break / lastIndex
