@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             FirstKotlinPracticeAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ShoppingListApp()
+                    TheCounterApp()
                 }
             }
         }
