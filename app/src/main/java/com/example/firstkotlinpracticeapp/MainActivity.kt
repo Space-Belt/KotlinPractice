@@ -5,17 +5,24 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,91 +37,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             FirstKotlinPracticeAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CaptainGame()
+                    ShoppingListApp()
                 }
             }
         }
     }
-
-    @Composable
-    fun CaptainGame() {
-        val directions = listOf("동", "서", "남", "북")
-        val treasuresFound = remember { mutableStateOf(0) }
-        val direction = remember { mutableStateOf("북") }
-        val toastMessage = remember {mutableStateOf("")}
-
-        val stormOrTreasure = remember { mutableStateOf("") }
-
-        val context = LocalContext.current
-
-        fun showToast(dir: String) {
-            direction.value = dir
-            if(Random.nextBoolean()) {
-                treasuresFound.value += 1
-                toastMessage.value = ""
-            } else {
-                toastMessage.value = "못"
-                stormOrTreasure.value = "폭풍이다!!"
-            }
-            Toast.makeText(context, "${direction.value}쪽에서 보물을 ${toastMessage.value}찾았습니다", Toast.LENGTH_SHORT).show()
-        }
-
-        @Composable
-        fun DirectionButton(direction: String) {
-            Button(
-                onClick = {
-                    showToast(direction)
-                },
-
-            ) {
-                Text("${direction}쪽으로")
-            }
-        }
-
-        @Composable
-        fun DirectionButtons() { // 방향 리스트
-
-            Row(modifier = Modifier.fillMaxWidth()) {
-                directions.forEach { direction ->
-                    DirectionButton(direction)  // 공통 버튼 컴포저블
-                }
-            }
-        }
-
-        Column(modifier = Modifier.padding(top = 50.dp)) {
-            Text(text = "보물 발견: ${treasuresFound.value}")
-            Text(text = "보물 방향: ${direction.value}")
-            Row {
-                Button(onClick = {
-                    showToast("동")
-                }){
-                    Text("동쪽으로")
-                }
-                Button(onClick = {
-                    showToast("서")
-                }){
-                    Text("서쪽으로")
-                }
-                Button(onClick = {
-                    showToast("남")
-                }){
-                    Text("남쪽으로")
-                }
-                Button(onClick = {
-                    showToast("북")
-                }){
-                    Text("북쪽으로")
-                }
-            }
-            Row {
-                DirectionButtons()
-
-            }
-            Text(text = stormOrTreasure.value)
-        }
-    }
-
-
 }
 
 
