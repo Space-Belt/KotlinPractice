@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,10 +19,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             FirstKotlinPracticeAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    RecipeScreen()
-                    MyApp()
+                    FoodRecipeApp(navController = navController)
                 }
             }
         }
@@ -32,36 +33,36 @@ class MainActivity : ComponentActivity() {
 //object Profile
 
 
-@Composable
-fun MyApp() {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "firstNavigationScreen") {
-        composable("firstNavigationScreen"){
-            FirstScreen {name,age ->
-                val safeAge = age?.toString() ?: "null"
-                navController.navigate("SecondNavigationScreen/$name/$safeAge")
-            }
-        }
-        composable("secondNavigationScreen/{name}/{age}") {
-            val name = it.arguments?.getString("name") ?: "no Name"
-            val ageString = it.arguments?.getString("age")
-            val age = ageString?.toIntOrNull()
-            SecondScreen(
-                name,
-                age,
-                { navController.navigate("FirstNavigationScreen") },
-                { navController.navigate("ThirdNavigationScreen") }
-            )
-        }
-        composable("thirdNavigationScreen") {
-            ThirdScreen(
-                {navController.navigate("FirstNavigationScreen")},
-                {navController.navigate("SecondNavigationScreen") }
-            )
-        }
-
-    }
-}
+//@Composable
+//fun MyApp() {
+//    val navController = rememberNavController()
+//    NavHost(navController = navController, startDestination = "firstNavigationScreen") {
+//        composable("firstNavigationScreen"){
+//            FirstScreen {name,age ->
+//                val safeAge = age?.toString() ?: "null"
+//                navController.navigate("SecondNavigationScreen/$name/$safeAge")
+//            }
+//        }
+//        composable("secondNavigationScreen/{name}/{age}") {
+//            val name = it.arguments?.getString("name") ?: "no Name"
+//            val ageString = it.arguments?.getString("age")
+//            val age = ageString?.toIntOrNull()
+//            SecondScreen(
+//                name,
+//                age,
+//                { navController.navigate("FirstNavigationScreen") },
+//                { navController.navigate("ThirdNavigationScreen") }
+//            )
+//        }
+//        composable("thirdNavigationScreen") {
+//            ThirdScreen(
+//                {navController.navigate("FirstNavigationScreen")},
+//                {navController.navigate("SecondNavigationScreen") }
+//            )
+//        }
+//
+//    }
+//}
 
 //@Serializable
 //object Profile
