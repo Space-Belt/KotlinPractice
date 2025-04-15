@@ -19,11 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SecondScreen(navigateToFirstScreen: () -> Unit) {
+fun SecondScreen(name: String, age: Int?, navigateToFirstScreen: (String) -> Unit, navigationToThirdScreen: () -> Unit) {
 
-    val name = remember {
-        mutableStateOf("")
-    }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -31,18 +28,21 @@ fun SecondScreen(navigateToFirstScreen: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Text("두번째 화면 입니다.", fontSize = 24.sp)
-        Text("환영 합니다.", fontSize = 24.sp)
+        Text("환영 합니다. $name ${if (age !== null) "$age 세" else "나이 없음"}", fontSize = 24.sp)
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = name.value, onValueChange = {
-            name.value = it
-        })
-
         Button(
             onClick = {
-                navigateToFirstScreen()
+                navigateToFirstScreen(name)
             }
         ) {
             Text("첫번째 화면 으로!")
+        }
+        Button(
+            onClick = {
+                navigationToThirdScreen()
+            }
+        ) {
+            Text("세번째 화면 으로!")
         }
     }
 }
@@ -50,5 +50,5 @@ fun SecondScreen(navigateToFirstScreen: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun SecondPreview() {
-    SecondScreen({})
+//    SecondScreen("dfd",2,{},{})
 }

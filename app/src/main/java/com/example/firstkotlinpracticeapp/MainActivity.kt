@@ -31,19 +31,33 @@ class MainActivity : ComponentActivity() {
 //@Serializable
 //object Profile
 
+
 @Composable
 fun MyApp() {
-    val navContoller = rememberNavController()
-    NavHost(navController = navContoller, startDestination = "firstNavigationScreen") {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "firstNavigationScreen") {
         composable("firstNavigationScreen"){
-            FirstScreen {
-                navContoller.navigate("SecondNavigationScreen")
+            FirstScreen {name,age ->
+                val safeAge = age?.toString() ?: "null"
+                navController.navigate("SecondNavigationScreen/$name/$safeAge")
             }
         }
-        composable("secondNavigationScreen"){
-            SecondScreen {
-                navContoller.navigate("FirstNavigationScreen")
-            }
+        composable("secondNavigationScreen/{name}/{age}") {
+            val name = it.arguments?.getString("name") ?: "no Name"
+            val ageString = it.arguments?.getString("age")
+            val age = ageString?.toIntOrNull()
+            SecondScreen(
+                name,
+                age,
+                { navController.navigate("FirstNavigationScreen") },
+                { navController.navigate("ThirdNavigationScreen") }
+            )
+        }
+        composable("thirdNavigationScreen") {
+            ThirdScreen(
+                {navController.navigate("FirstNavigationScreen")},
+                {navController.navigate("SecondNavigationScreen") }
+            )
         }
 
     }
