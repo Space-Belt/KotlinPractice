@@ -1,6 +1,11 @@
 package com.example.firstkotlinpracticeapp
 
 
+import android.Manifest
+import android.content.Context
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
@@ -23,6 +28,7 @@ import androidx.compose.material.icons.Icons
 
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -48,20 +54,62 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.app.ActivityCompat
+import androidx.navigation.NavController
 
 data class ShoppingItem(val id:Int,
                         var name: String,
                         var quantity:Int,
+                        var address: String = ""
 )
 
 @Composable
-fun ShoppingListApp() {
-//    var shoppingItems by remember{ mutableStateOf(listOf<ShoppingItem>()) }
+fun ShoppingListApp(
+    locationUtils: LocationUtils,
+    viewModel: LocationViewModel,
+    navController: NavController,
+    context: Context,
+    address: String
+) {
     val shoppingItems = remember { mutableStateListOf<ShoppingItem>() }
     var showDialog by remember { mutableStateOf(false) }
 
     var itemName by remember {mutableStateOf("")}
     var itemQuantity by remember {mutableStateOf("")}
+
+
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = {permissions ->
+            if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+                && permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true) {
+                locationUtils.requestLocationUpdated(viewModel = viewModel)
+            } else {
+                val rationaleRequired = ActivityCompat.shouldShowRequestPermissionRationale(
+                    context as MainActivity,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) || ActivityCompat.shouldShowRequestPermissionRationale(
+                    context as MainActivity,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+
+                if (rationaleRequired) {
+                    Toast.makeText(
+                        context,
+                        "위치접근권한이 필요합니다.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        context,
+                        "설정에서 권한을 허용해주세요.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    )
+
 
     var activeItemEdit by remember {mutableStateOf("")}
 
@@ -121,6 +169,7 @@ fun ShoppingListApp() {
                                     id = shoppingItems.size+1,
                                     name = itemName,
                                     quantity = itemQuantity.toInt(),
+                                    address = address
                                 )
                                 shoppingItems.add(newItem)
                             } else {
@@ -128,7 +177,8 @@ fun ShoppingListApp() {
                                 if (index != -1) {
                                     shoppingItems[index] = shoppingItems[index].copy(
                                         name = itemName,
-                                        quantity = itemQuantity.toIntOrNull() ?: 1
+                                        quantity = itemQuantity.toIntOrNull() ?: 1,
+                                        address = address
                                     )
                                 }
                             }
@@ -173,6 +223,24 @@ fun ShoppingListApp() {
                         label = { Text("수량") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
+                    Button(onClick = {
+                        if(locationUtils.hasLocationPermission(context)) {
+                            locationUtils.requestLocationUpdated(viewModel)
+                            navController.navigate("locationscreen") {
+                                // 불리언 관리, navigation이 singleTop 해야하는지, 스택 내부에 하나의 화면만 있어야하는지
+                                this.launchSingleTop
+                            }
+                        } else {
+                            requestPermissionLauncher.launch(
+                                arrayOf(
+                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION
+                                )
+                            )
+                        }
+                    }) {
+                        Text("주소")
+                    }
                 }
             }
         )
@@ -204,9 +272,19 @@ fun ShoppingListItem(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column{
-            Text(text = item.name, modifier = Modifier.padding(8.dp))
-            Text(text = "수량 ${item.quantity}", modifier = Modifier.padding(8.dp))
+        Column(
+          modifier = Modifier.weight(1f).padding(8.dp)
+        ) {
+            Row {
+                Text(text = item.name, modifier = Modifier.padding(8.dp))
+                Text(text = "수량 ${item.quantity}", modifier = Modifier.padding(8.dp))
+            }
+            Row (
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(imageVector = Icons.Default.LocationOn, contentDescription =  null )
+                Text(text = item.address)
+            }
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
             Button(
